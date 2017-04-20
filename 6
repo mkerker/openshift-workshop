@@ -1,0 +1,52 @@
+## Lab 6: Blue-Green Deployment
+
+Blue-green deployments involve running two versions of an application at the same time and moving production traffic from the old version to the new version. There are several ways to implement a blue-green deployment in OpenShift Container Platform.
+
+#### When to Use a Blue-Green Deployment
+Use a blue-green deployment when you want to test a new version of your application in a production environment before moving traffic to it.
+
+Blue-green deployments make switching between two different versions of your application easy. However, since many applications depend on persistent data, you will need to have an application that supports N-1 compatibility if you share a database, or implement a live data migration between your database, store, or disk if you choose to create two copies of your data layer.
+
+#### Step 1: Blue-Green Deployment Example
+
+Create a project called `bluegreen`.
+
+```
+$ oc new-project bluegreen
+```
+
+In order to maintain control over two distinct groups of instances (old and new versions of the code), the blue-green deployment is best represented with multiple deployment configurations.
+
+A route points to a service, and can be changed to point to a different service at any time. As a developer, test the new version of your code by connecting to the new service before your production traffic is routed to it. Routes are intended for web (HTTP and HTTPS) traffic, so this technique is best suited for web applications.
+
+Create two copies of the example application:
+```
+$ oc new-app mkerker/deployment-example:v1 --name=example-green
+$ oc new-app mkerker/deployment-example:v2 --name=example-blue
+```
+
+This will create two independent application components: one running the v1 image under the example-green service, and one using the v2 image under the example-blue service.
+
+Create a route that points to the old service:
+```
+$ oc expose svc/example-green --name=bluegreen-example
+```
+See route:
+```
+$ oc get route
+```
+Browse to the application at bluegreen.bluegreen-example.<router_domain> to verify you see the v1 image.
+
+Edit the route and change the service name to `example-blue`:
+```
+$ oc patch route/bluegreen-example -p '{"spec":{"to":{"name":"example-blue"}}}'
+```
+
+Or use `oc edit` to edit the route and change the sevice name to `example-blue`
+
+```
+$ oc edit
+```
+
+
+In your browser, refresh the page until you see the v2 image.
