@@ -4,7 +4,7 @@ This is a pretty simple lab, we are going to explore labels. You can use labels 
 For example, pods are “tagged” with labels, and then services use label selectors to identify the pods they proxy to. This makes it possible for services to reference groups of pods, even treating pods with potentially different Docker containers as related entities.
 
 **Step 1: Labels a on pod**
-In a previous lab we added our web app using a S2I template. When we did that, OpenShift labeled our objects for us. Let’s look at the labels on our running pod.
+In a previous lab we added our web app using a template. When we did that, OpenShift labeled our objects for us. Let’s look at the labels on our running pod.
 
 Goto the terminal and try the following:
 ```
@@ -32,4 +32,5 @@ $ oc describe all | grep -i "labels:"
 ```
 
 **Summary**
+
 That’s it for this lab, now you know that all the objects in OpenShift can be labeled. This is important because those labels can be used as part of your CI/CD process. Advanced labs will cover using labels for Blue/Green deployments and running yours apps on specific nodes (e.g. just on SSD nodes or just on east coast nodes). 
