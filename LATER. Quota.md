@@ -59,6 +59,7 @@ At this point we have created our "demo" project, so let's apply the quota above
 to it. Still in a `root` terminal on your master:
 
     oc create -f ~/training/content/quota.json -n demo
+    oc create -f https://raw.githubusercontent.com/mkerker/traning/master/training/content/quota.json -n demo
 
 If you want to see that it was created:
 
