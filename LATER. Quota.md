@@ -1,17 +1,19 @@
-# Your First Application
-At this point you essentially have a sufficiently-functional V3 OpenShift
-environment. It is now time to create the classic "Hello World" application
-using some sample code.  But, first, some housekeeping.
+## Lab x: ResourcesQuota
 
-Also, don't forget, the materials for these examples are in your
-`~/training/content` folder.
-
-## ResourcesQuota
-There are a number of different resource types in OpenShift 3, and, essentially,
+There are a number of different resource types in OpenShif, and essentially,
 going through the motions of creating/destroying apps, scaling, building and
 etc. all ends up manipulating OpenShift and Kubernetes resources under the
-covers. Resources can have quotas enforced against them, so let's take a moment
+covers. 
+
+#### Step 1: Quota example
+
+Resources can have quotas enforced against them, so let's take a moment
 to look at some example JSON for project resource quota might look like:
+
+
+    $ wget https://raw.githubusercontent.com/mkerker/traning/master/training/content/quota.json
+    
+    $ cat quota.json
 
     {
       "apiVersion": "v1",
@@ -54,22 +56,23 @@ controllers are over the next few labs. Lastly, we can ignore "resourcequotas",
 as it is a bit of a trick so that Kubernetes doesn't accidentally try to apply
 two quotas to the same namespace.
 
-## Applying Quota to Projects
-At this point we have created our "demo" project, so let's apply the quota above
-to it. Still in a `root` terminal on your master:
+## Step 2: Applying Quota to Projects
 
-    oc create -f ~/training/content/quota.json -n demo
-    oc create -f https://raw.githubusercontent.com/mkerker/traning/master/training/content/quota.json -n demo
+At this point we create a new project called `resouces` project, after that, let's apply the quota above
+to it.
+
+    $  oc create -f quota.json 
+
 
 If you want to see that it was created:
 
-    oc get -n demo quota
+    $ oc get quota
     NAME
     test-quota
 
 And if you want to verify limits or examine usage:
 
-    oc describe quota test-quota -n demo
+    $ oc describe quota test-quota 
     Name:           test-quota
     Namespace:      demo
     Resource        Used    Hard
@@ -79,7 +82,7 @@ And if you want to verify limits or examine usage:
     pods            0       3
     resourcequotas  1       1
 
-If you go back into the web console and click into the "OpenShift 3 Demo"
+If you go back into the web console and click into the "resource"
 project, and click on the *Settings* tab, you'll see that the quota information
 is displayed.
 
@@ -94,13 +97,15 @@ both a pod and container level. Without default values for containers projects
 with quotas will fail because the deployer and other infrastructure pods are
 unbounded and therefore forbidden.
 
-As `root`:
-
-    oc create -f ~/training/content/limits.json -n demo
+    $ wget https://raw.githubusercontent.com/mkerker/traning/master/training/content/limits.json
+    
+    $ cat limits.json
+    
+    $ oc create -f limits.json
 
 Review your limit ranges
 
-    oc describe limitranges limits -n demo
+    oc describe limitranges limits 
     Name:           limits
     Namespace:      demo
     Type            Resource        Min     Max     Request Limit   Limit/Request
